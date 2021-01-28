@@ -21,10 +21,12 @@ module.exports = function(md, o) {
   var options = Object.assign({}, defaults, o);
   var tocRegexp = options.markerPattern;
   var gstate;
+  var links;
 
   function toc(state, silent) {
     var token;
     var match;
+    links = [];
 
     // Reject if the token does not start with [
     if (state.src.charCodeAt(state.pos) !== 0x5B /* [ */ ) {
@@ -130,8 +132,17 @@ module.exports = function(md, o) {
       if (options.transformLink) {
           link = options.transformLink(link);
       }
-      buffer = `<li><a href="${link}">`;
-      buffer += options.format(content, md, link);
+
+      // Check if this link has been generated before and increment link if so
+      var generatedLink = link;
+      var index = 2;
+      while (links.indexOf(generatedLink) >= 0) {
+        generatedLink = link + "-" + index++;
+      }
+      links.push(generatedLink);
+
+      buffer = `<li><a href="${generatedLink}">`;
+      buffer += options.format(content, md, generatedLink);
       buffer += `</a>`;
       i++;
     }

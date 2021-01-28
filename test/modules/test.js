@@ -19,8 +19,10 @@ var simple1LevelHTML = fs.readFileSync("test/fixtures/simple-1-level.html", "utf
 var simpleWithAnchorsHTML = fs.readFileSync("test/fixtures/simple-with-anchors.html", "utf-8");
 var simpleWithHeaderFooterHTML = fs.readFileSync("test/fixtures/simple-with-header-footer.html", "utf-8");
 var simpleWithTransformLink = fs.readFileSync("test/fixtures/simple-with-transform-link.html", "utf-8");
-var simpleWithHeadingLink = fs.readFileSync("test/fixtures/simple-with-heading-link.md", "utf-8");
-var simpleWithHeadingLinkHTML = fs.readFileSync("test/fixtures/simple-with-heading-link.html", "utf-8");
+var simpleWithHeadingLink = fs.readFileSync("test/fixtures/simple-with-heading-links.md", "utf-8");
+var simpleWithHeadingLinkHTML = fs.readFileSync("test/fixtures/simple-with-heading-links.html", "utf-8");
+var simpleWithDuplicateHeadings = fs.readFileSync("test/fixtures/simple-with-duplicate-headings.md", "utf-8");
+var simpleWithDuplicateHeadingsHTML = fs.readFileSync("test/fixtures/simple-with-duplicate-headings.html", "utf-8");
 var emptyMarkdown = defaultMarker;
 var emptyMarkdownHtml = fs.readFileSync("test/fixtures/empty.html", "utf-8");
 var fullTocSampleMarkdown = fs.readFileSync("test/fixtures/full-toc-sample.md", "utf-8");
@@ -156,6 +158,14 @@ describe("Testing Markdown rendering", function() {
   it("Parses correctly when headers are links", function (done) {
     md.use(markdownItTOC);
     assert.equal(adjustEOL(md.render(simpleWithHeadingLink)), simpleWithHeadingLinkHTML);
+    done();
+  });
+
+  it("Parses correctly with duplicate headers", function (done) {
+    md.use(markdownItTOC, {
+      "includeLevel": [1,2,3,4]
+    });
+    assert.equal(adjustEOL(md.render(simpleWithDuplicateHeadings)), simpleWithDuplicateHeadingsHTML);
     done();
   });
 });
